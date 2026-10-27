@@ -82,7 +82,7 @@ fun Category.icon(): ImageVector = when (this) {
     Category.BLURRY -> Icons.Filled.BlurOn
     Category.LOW_RES -> Icons.Filled.PhotoSizeSelectSmall
     Category.SCREENSHOTS -> Icons.Filled.Screenshot
-    Category.WHATSAPP -> Icons.Filled.Forum
+    Category.SOCIAL -> Icons.Filled.Forum
     Category.LARGE -> Icons.Filled.SdStorage
 }
 

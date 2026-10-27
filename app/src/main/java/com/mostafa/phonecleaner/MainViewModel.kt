@@ -1,6 +1,9 @@
 package com.mostafa.phonecleaner
 
 import android.app.Application
+import android.os.SystemClock
+import com.mostafa.phonecleaner.notify.Notifier
+import com.mostafa.phonecleaner.notify.Reminder
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,6 +19,7 @@ import com.mostafa.phonecleaner.scan.FileItem
 import com.mostafa.phonecleaner.scan.ScanPhase
 import com.mostafa.phonecleaner.scan.ScanProgress
 import com.mostafa.phonecleaner.scan.StorageScanner
+import com.mostafa.phonecleaner.scan.quickCleanItems
 import com.mostafa.phonecleaner.trash.TrashEntry
 import com.mostafa.phonecleaner.trash.TrashManager
 import com.mostafa.phonecleaner.util.Perms
@@ -68,13 +72,36 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     init {
         refreshPermissions()
         refreshStorage()
+        Notifier.createChannels(app)
+        Reminder.schedule(app)
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                trash.purge(prefs.trashDays)
+                val (n, bytes) = trash.purge(prefs.trashDays)
+                Notifier.purged(app, n, bytes)
             } catch (_: Exception) {
             }
             loadTrashNow()
         }
+        Notifier.lowStorage(app, DeviceHealth.storage())
+    }
+
+    private val ctx: Application get() = getApplication()
+
+    @Volatile
+    private var lastProgressNotif = 0L
+
+    private fun onProgress(p: ScanProgress) {
+        progress.value = p
+        val now = SystemClock.elapsedRealtime()
+        if (now - lastProgressNotif < 800) return
+        lastProgressNotif = now
+        val text = when (p.phase) {
+            ScanPhase.FILES -> ctx.getString(R.string.phase_files, p.done)
+            ScanPhase.DUPLICATES -> ctx.getString(R.string.phase_duplicates)
+            ScanPhase.IMAGES -> ctx.getString(R.string.phase_images, p.done, p.total)
+            ScanPhase.APPS -> ctx.getString(R.string.phase_apps)
+        }
+        Notifier.scanProgress(ctx, text, p.done, p.total)
     }
 
     fun refreshPermissions() {
@@ -93,17 +120,25 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         if (scanning || !hasAllFiles) return
         scanJob = viewModelScope.launch {
             scanning = true
+            lastProgressNotif = 0L
+            onProgress(ScanProgress(ScanPhase.FILES, 0, 0))
             try {
-                val r = StorageScanner(getApplication(), prefs).scan { progress.value = it }
+                val r = StorageScanner(ctx, prefs).scan { onProgress(it) }
                 results = r
                 scanned = true
-                progress.value = ScanProgress(ScanPhase.APPS, 0, 0)
-                apps = withContext(Dispatchers.IO) { AppAnalyzer.load(getApplication()) }
+                lastProgressNotif = 0L
+                onProgress(ScanProgress(ScanPhase.APPS, 0, 0))
+                apps = withContext(Dispatchers.IO) { AppAnalyzer.load(ctx) }
                 appsLoaded = true
+                refreshStorage()
+                Notifier.scanDone(ctx, r, storage)
+                Notifier.lowStorage(ctx, storage)
             } catch (e: CancellationException) {
+                Notifier.cancel(ctx, Notifier.ID_SCAN)
                 throw e
             } catch (e: Exception) {
                 message = UiMessage(R.string.scan_failed)
+                Notifier.scanFailed(ctx)
             } finally {
                 scanning = false
                 progress.value = null
@@ -153,8 +188,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /** Items the "quick clean" button removes: only pre-selected items from the safe categories. */
-    fun quickCleanItems(): List<FileItem> =
-        results.filterKeys { it.quickClean }.values.flatten().filter { it.suggested }.distinctBy { it.path }
+    fun quickCleanItems(): List<FileItem> = results.quickCleanItems()
 
     fun delete(items: List<FileItem>, permanent: Boolean) {
         if (items.isEmpty() || busy) return
@@ -179,6 +213,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 }
                 val bytes = unique.filter { it.path in removedSet }.sumOf { it.size }
                 message = if (permanent) UiMessage(R.string.msg_deleted, bytes) else UiMessage(R.string.msg_trashed, bytes)
+                if (removed.isNotEmpty()) Notifier.cleaned(ctx, bytes, removed.size, permanent, prefs.trashDays)
                 refreshStorage()
                 loadTrashNow()
             } finally {
@@ -191,6 +226,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             val n = withContext(Dispatchers.IO) { trash.restore(ids) }
             message = UiMessage(R.string.msg_restored, n.toLong())
+            if (n > 0) Notifier.restored(ctx, n)
             loadTrashNow()
             refreshStorage()
         }
@@ -198,7 +234,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun deleteForever(ids: Set<String>) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) { trash.deleteForever(ids) }
+            val (n, bytes) = withContext(Dispatchers.IO) { trash.deleteForever(ids) }
+            if (n > 0) Notifier.trashEmptied(ctx, n, bytes)
             loadTrashNow()
             refreshStorage()
         }
@@ -207,7 +244,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun setTrashDays(days: Int) {
         prefs.trashDays = days
         viewModelScope.launch {
-            withContext(Dispatchers.IO) { trash.purge(days) }
+            val (n, bytes) = withContext(Dispatchers.IO) { trash.purge(days) }
+            Notifier.purged(ctx, n, bytes)
             loadTrashNow()
         }
     }

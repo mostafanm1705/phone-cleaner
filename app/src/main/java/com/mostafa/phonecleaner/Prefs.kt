@@ -30,4 +30,24 @@ class Prefs(context: Context) {
     var screenshotDays: Int
         get() = sp.getInt("screenshot_days", 30)
         set(v) = sp.edit().putInt("screenshot_days", v).apply()
+
+    var activityNotifications: Boolean
+        get() = sp.getBoolean("notif_activity", true)
+        set(v) = sp.edit().putBoolean("notif_activity", v).apply()
+
+    var reminderEnabled: Boolean
+        get() = sp.getBoolean("reminder_on", true)
+        set(v) = sp.edit().putBoolean("reminder_on", v).apply()
+
+    var reminderHour: Int
+        get() = sp.getInt("reminder_hour", 22)
+        set(v) = sp.edit().putInt("reminder_hour", v).apply()
+
+    var reminderMinute: Int
+        get() = sp.getInt("reminder_minute", 0)
+        set(v) = sp.edit().putInt("reminder_minute", v).apply()
+
+    var lowStorageAlert: Boolean
+        get() = sp.getBoolean("low_storage_alert", true)
+        set(v) = sp.edit().putBoolean("low_storage_alert", v).apply()
 }

@@ -72,14 +72,26 @@ fun CategoryScreen(vm: MainViewModel, cat: Category, onBack: () -> Unit) {
     val ctx = LocalContext.current
     val all = vm.results[cat].orEmpty()
     val selected = remember(cat) {
-        mutableStateMapOf<String, Boolean>().apply { all.forEach { if (it.suggested) put(it.path, true) } }
+        mutableStateMapOf<String, Boolean>().apply {
+            if (cat.preselect) all.forEach { if (it.suggested) put(it.path, true) }
+        }
     }
     var filter by remember(cat) { mutableStateOf<String?>(null) }
+    var kindFilter by remember(cat) { mutableStateOf<String?>(null) }
     var preview by remember { mutableStateOf<FileItem?>(null) }
     var confirm by remember { mutableStateOf(false) }
 
-    val details = remember(all) { all.map { it.detail }.filter { it.isNotEmpty() }.distinct() }
-    val visible = if (filter == null) all else all.filter { it.detail == filter }
+    // apps (or folders) ordered by total size, biggest first
+    val details = remember(all) {
+        all.filter { it.detail.isNotEmpty() }.groupBy { it.detail }
+            .entries.sortedByDescending { e -> e.value.sumOf { it.size } }.map { it.key }
+    }
+    val byApp = if (filter == null) all else all.filter { it.detail == filter }
+    val kinds = remember(byApp) {
+        byApp.filter { it.kind.isNotEmpty() }.groupBy { it.kind }
+            .entries.sortedByDescending { e -> e.value.sumOf { it.size } }.map { it.key }
+    }
+    val visible = if (kindFilter == null) byApp else byApp.filter { it.kind == kindFilter }
     val chosen = all.filter { selected[it.path] == true }
     val chosenSize = chosen.sumOf { it.size }
 
@@ -110,25 +122,17 @@ fun CategoryScreen(vm: MainViewModel, cat: Category, onBack: () -> Unit) {
             item {
                 Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                     InfoNote(stringResource(cat.desc))
-                    if (details.size in 2..20) {
+                    if (details.size >= 2) {
                         Spacer(Modifier.height(8.dp))
-                        Row(
-                            Modifier.horizontalScroll(rememberScrollState()),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            FilterChip(
-                                selected = filter == null,
-                                onClick = { filter = null },
-                                label = { Text(stringResource(R.string.all)) }
-                            )
-                            details.forEach { d ->
-                                val n = all.count { it.detail == d }
-                                FilterChip(
-                                    selected = filter == d,
-                                    onClick = { filter = d },
-                                    label = { Text("$d ($n)") }
-                                )
-                            }
+                        ChipRow(details, filter, all.size, { d -> all.filter { it.detail == d } }) {
+                            filter = it
+                            kindFilter = null
+                        }
+                    }
+                    if (kinds.size >= 2) {
+                        Spacer(Modifier.height(4.dp))
+                        ChipRow(kinds, kindFilter, byApp.size, { k -> byApp.filter { it.kind == k } }) {
+                            kindFilter = it
                         }
                     }
                     Spacer(Modifier.height(4.dp))
@@ -237,6 +241,35 @@ fun CategoryScreen(vm: MainViewModel, cat: Category, onBack: () -> Unit) {
     }
 }
 
+@Composable
+private fun ChipRow(
+    values: List<String>,
+    current: String?,
+    allCount: Int,
+    itemsOf: (String) -> List<FileItem>,
+    onSelect: (String?) -> Unit,
+) {
+    val ctx = LocalContext.current
+    Row(
+        Modifier.horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        FilterChip(
+            selected = current == null,
+            onClick = { onSelect(null) },
+            label = { Text(stringResource(R.string.all) + " ($allCount)") }
+        )
+        values.forEach { v ->
+            val list = itemsOf(v)
+            FilterChip(
+                selected = current == v,
+                onClick = { onSelect(v) },
+                label = { Text("$v • ${list.size} • ${ctx.sizeText(list.sumOf { it.size })}") }
+            )
+        }
+    }
+}
+
 private fun toggle(selected: MutableMap<String, Boolean>, item: FileItem) {
     if (selected[item.path] == true) selected.remove(item.path) else selected[item.path] = true
 }
@@ -290,7 +323,11 @@ private fun FileRow(item: FileItem, checked: Boolean, onToggle: () -> Unit, onOp
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(item.name, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            val reason = if (item.reason != 0) stringResource(item.reason, item.reasonArg) else item.parent.substringAfterLast('/')
+            val reason = when {
+                item.reason != 0 -> stringResource(item.reason, item.reasonArg)
+                item.kind.isNotEmpty() -> "${item.detail} • ${item.kind}"
+                else -> item.parent.substringAfterLast('/')
+            }
             Text(reason, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(

@@ -73,8 +73,6 @@
     <string name="cat_lowres_desc">صور صغيرة ومبكسلة (أقل من 0.3 ميجابكسل)، غالباً نسخ متحولة أو متحملة من النت.</string>
     <string name="cat_screenshots">سكرينشوتات قديمة</string>
     <string name="cat_screenshots_desc">سكرينشوتات وتسجيلات شاشة أقدم من المدة اللي في الإعدادات. غالباً مبقاش ليها لازمة.</string>
-    <string name="cat_whatsapp">ميديا واتساب</string>
-    <string name="cat_whatsapp_desc">صور وفيديوهات وفويسات وملفات جاتلك أو بعتها على واتساب. استخدم الفلاتر عشان تنضف نوع نوع. مفيش حاجة متعلّم عليها.</string>
     <string name="cat_large">ملفات كبيرة</string>
     <string name="cat_large_desc">ملفات أكبر من الحجم اللي في الإعدادات. مفيش حاجة متعلّم عليها، شوف إيه اللي مبقاش ليه لازمة.</string>
 
@@ -97,8 +95,6 @@
     <string name="reason_apk_installed">%1$s متسطب أصلاً</string>
     <string name="reason_apk_newer">%1$s: أحدث من النسخة المتسطبة</string>
     <string name="reason_apk_not_installed">%1$s مش متسطب</string>
-    <string name="wa_sent">مبعوت</string>
-    <string name="wa_private">خاص</string>
     <string name="type_image">صورة</string>
     <string name="type_video">فيديو</string>
     <string name="type_audio">صوت</string>
@@ -237,4 +233,55 @@
     <string name="rescan_note">التغييرات بتتطبق في الفحص الجاي.</string>
     <string name="about">عن التطبيق</string>
     <string name="about_text">منظف الموبايل %1$s. شغال من غير إنترنت تماماً: مفيش أي حاجة بتخرج من موبايلك.</string>
+
+    <!-- social -->
+    <string name="cat_social">ملفات السوشيال ميديا</string>
+    <string name="cat_social_desc">صور وفيديوهات وفويسات وملفات من واتساب وفيسبوك وماسنجر وانستجرام وتليجرام وتيك توك وسناب شات وباقي تطبيقات السوشيال. كلها معتبرة مالهاش لازمة، بس مفيش حاجة متحددة: فلتر بالتطبيق أو النوع، حدد اللي عايز تمسحه، والباقي هيفضل. نسخ الشات الاحتياطية عمرها ما بتظهر هنا.</string>
+    <string name="kind_images">صور</string>
+    <string name="kind_videos">فيديوهات</string>
+    <string name="kind_audio">صوتيات</string>
+    <string name="kind_voice">فويسات</string>
+    <string name="kind_documents">مستندات</string>
+    <string name="kind_stickers">استيكرز</string>
+    <string name="kind_statuses">حالات اتشافت</string>
+    <string name="kind_other">أخرى</string>
+
+    <!-- notifications -->
+    <string name="ch_progress">تقدم الفحص</string>
+    <string name="ch_activity">نشاط التطبيق</string>
+    <string name="ch_reminder">التذكير اليومي</string>
+    <string name="ch_alerts">تنبيهات المساحة</string>
+    <string name="n_scan_running">بيفحص الموبايل…</string>
+    <string name="n_scan_done_title">الفحص خلص</string>
+    <string name="n_junk_found">%1$s ملفات مالهاش لازمة ممكن تتمسح بأمان (%2$d عنصر).</string>
+    <string name="n_no_junk">مفيش ملفات مالهاش لازمة.</string>
+    <string name="n_social_found">%1$d ملف سوشيال ميديا (%2$s) مستنيين تراجعهم.</string>
+    <string name="n_storage_line">المساحة مستخدمة %1$d%%، والفاضي %2$s.</string>
+    <string name="n_clean_title">التنظيف خلص</string>
+    <string name="n_trashed">%1$d عنصر (%2$s) اتنقلوا للسلة. هيتمسحوا نهائي بعد %3$d يوم، أو فضّي السلة عشان المساحة تفضى دلوقتي.</string>
+    <string name="n_deleted">%1$d عنصر اتمسحوا، ووفرت %2$s.</string>
+    <string name="n_restored">%1$d عنصر رجعوا مكانهم.</string>
+    <string name="n_trash_emptied">السلة اتفضت: %1$d عنصر، ووفرت %2$s.</string>
+    <string name="n_purged">%1$d عنصر قديم اتمسحوا من السلة، ووفرت %2$s.</string>
+    <string name="n_reminder_title">وقت تنظيف الموبايل</string>
+    <string name="n_reminder_checking">بيفحص الموبايل…</string>
+    <string name="n_reminder_text">تذكير التنظيف اليومي. دوس عشان تفحص الموبايل وتراجع اللي ممكن يتمسح.</string>
+    <string name="n_reminder_tap">دوس عشان تراجع وتنضف.</string>
+    <string name="n_low_title">الموبايل محتاج تنظيف</string>
+    <string name="n_low_text">فاضل %1$s بس (%2$d%%). نضّف الموبايل عشان ميبقاش تقيل.</string>
+    <string name="n_action_scan">افحص دلوقتي</string>
+
+    <!-- notification settings -->
+    <string name="notifications">الإشعارات</string>
+    <string name="notif_off_warning">الإشعارات مقفولة للتطبيق ده، فمش هيوصلك تنبيهات ولا التذكير اليومي.</string>
+    <string name="allow_notifications">فعّل الإشعارات</string>
+    <string name="notif_activity">إشعارات النشاط</string>
+    <string name="notif_activity_desc">لما الفحص يبدأ ويخلص، وبعد الحذف أو الاسترجاع أو تفضية السلة.</string>
+    <string name="daily_reminder">تذكير التنظيف اليومي</string>
+    <string name="daily_reminder_desc">كل يوم الساعة %1$s التطبيق بيفحص الموبايل ويقولك قد إيه ممكن يتنضف.</string>
+    <string name="reminder_time">وقت التذكير</string>
+    <string name="low_storage_alert">تنبيه المساحة القليلة</string>
+    <string name="low_storage_desc">نبّهني لما المساحة الفاضية تقل عن 15 في المية.</string>
+    <string name="samsung_sleep_note">سامسونج ممكن تنيّم التطبيقات. عشان التذكير يوصل في معاده دايماً، افتح إعدادات التطبيق › البطارية واختار غير مقيّد.</string>
+    <string name="open_app_settings">افتح إعدادات التطبيق</string>
 </resources>

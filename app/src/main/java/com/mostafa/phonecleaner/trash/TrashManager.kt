@@ -135,25 +135,33 @@ class TrashManager(private val ctx: Context) {
         return n
     }
 
+    /** Returns (number of items, bytes freed). */
     @Synchronized
-    fun deleteForever(ids: Set<String>) {
+    fun deleteForever(ids: Set<String>): Pair<Int, Long> {
         val list = read()
+        var n = 0
+        var bytes = 0L
         val iterator = list.iterator()
         while (iterator.hasNext()) {
             val e = iterator.next()
             if (e.id in ids) {
-                File(dir, e.id).deleteRecursively()
+                if (File(dir, e.id).deleteRecursively()) {
+                    n++
+                    bytes += e.size
+                }
                 iterator.remove()
             }
         }
         write(list)
+        return n to bytes
     }
 
+    /** Removes items older than [days]. Returns (number of items, bytes freed). */
     @Synchronized
-    fun purge(days: Int) {
+    fun purge(days: Int): Pair<Int, Long> {
         val limit = System.currentTimeMillis() - days * 24L * 60 * 60 * 1000
         val old = read().filter { it.deletedAt < limit }.map { it.id }.toSet()
-        if (old.isNotEmpty()) deleteForever(old)
+        return if (old.isNotEmpty()) deleteForever(old) else 0 to 0L
     }
 
     private fun collectFiles(d: File, out: MutableList<String>) {

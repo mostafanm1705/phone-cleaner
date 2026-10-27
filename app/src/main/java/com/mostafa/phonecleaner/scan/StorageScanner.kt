@@ -37,7 +37,10 @@ class StorageScanner(private val ctx: Context, private val prefs: Prefs) {
         TrashManager.trashDir().absolutePath,
     ).map { it.lowercase() }
 
-    suspend fun scan(onProgress: (ScanProgress) -> Unit): Map<Category, List<FileItem>> =
+    /**
+     * @param light skip duplicate hashing and photo analysis (used by the nightly background check)
+     */
+    suspend fun scan(light: Boolean = false, onProgress: (ScanProgress) -> Unit): Map<Category, List<FileItem>> =
         withContext(Dispatchers.IO) {
             val out = HashMap<Category, MutableList<FileItem>>()
             Category.entries.forEach { out[it] = mutableListOf() }
@@ -115,11 +118,15 @@ class StorageScanner(private val ctx: Context, private val prefs: Prefs) {
                     )
                 }
 
-                val wa = whatsAppFolder(e.path)
-                if (wa != null) {
+                val social = socialApp(e)
+                if (social != null && !isChatBackup(e)) {
                     add(
-                        Category.WHATSAPP,
-                        FileItem(e.path, e.size, e.modified, detail = wa, isImage = isImage, isVideo = isVideo)
+                        Category.SOCIAL,
+                        FileItem(
+                            e.path, e.size, e.modified, suggested = true,
+                            detail = social, kind = socialKind(e),
+                            isImage = isImage, isVideo = isVideo
+                        )
                     )
                 }
 
@@ -183,6 +190,12 @@ class StorageScanner(private val ctx: Context, private val prefs: Prefs) {
                         )
                     )
                 }
+            }
+
+            if (light) {
+                out.getValue(Category.JUNK).sortByDescending { it.size }
+                out.getValue(Category.SOCIAL).sortByDescending { it.size }
+                return@withContext out
             }
 
             // ---------- 5. exact duplicates ----------
@@ -326,7 +339,7 @@ class StorageScanner(private val ctx: Context, private val prefs: Prefs) {
             out.getValue(Category.JUNK).sortByDescending { it.size }
             out.getValue(Category.APKS).sortByDescending { it.size }
             out.getValue(Category.LARGE).sortByDescending { it.size }
-            out.getValue(Category.WHATSAPP).sortByDescending { it.size }
+            out.getValue(Category.SOCIAL).sortByDescending { it.size }
             out.getValue(Category.LEFTOVERS).sortByDescending { it.size }
             out.getValue(Category.LOW_RES).sortByDescending { it.size }
             out.getValue(Category.SCREENSHOTS).sortBy { it.modified }
@@ -375,21 +388,94 @@ class StorageScanner(private val ctx: Context, private val prefs: Prefs) {
         else -> 1
     }
 
-    private fun whatsAppFolder(path: String): String? {
-        for (marker in listOf("/WhatsApp/Media/", "/WhatsApp Business/Media/")) {
-            val idx = path.indexOf(marker, 0, ignoreCase = true)
-            if (idx < 0) continue
-            val rest = path.substring(idx + marker.length)
-            if (!rest.contains('/')) return null
-            var folder = rest.substringBefore('/')
-                .removePrefix("WhatsApp Business ")
-                .removePrefix("WhatsApp ")
-                .removePrefix(".")
-            if (rest.contains("/Sent/", ignoreCase = true)) folder += " • " + ctx.getString(R.string.wa_sent)
-            if (rest.contains("/Private/", ignoreCase = true)) folder += " • " + ctx.getString(R.string.wa_private)
-            return folder
+    /** Name of the social app a file belongs to, or null. */
+    private fun socialApp(e: Entry): String? {
+        if (!e.path.startsWith("$rootPath/")) return null
+        val seg = e.path.substring(rootPath.length + 1).split('/')
+        if (seg.size < 2) return null
+        val s0 = seg[0].lowercase()
+        if (s0 == "android") {
+            // Android/media/<package>/... (needs at least one folder level inside the package folder)
+            return if (seg.size >= 4 && seg[1].equals("media", ignoreCase = true)) SOCIAL_PACKAGES[seg[2]] else null
         }
+        SOCIAL_FOLDERS[s0]?.let { return it } // old layout: /WhatsApp/..., /Telegram/...
+        if (seg.size >= 3 && s0 in MEDIA_ROOTS) SOCIAL_FOLDERS[seg[1].lowercase()]?.let { return it }
         return null
+    }
+
+    /** Never offer chat backups / databases: deleting them can lose chat history. */
+    private fun isChatBackup(e: Entry): Boolean =
+        e.lower.contains("/databases/") || e.lower.contains("/backups/") ||
+            e.name.startsWith("msgstore") || e.ext == "crypt14" || e.ext == "crypt15" || e.ext == "db"
+
+    private fun socialKind(e: Entry): String = ctx.getString(
+        when {
+            e.lower.contains("/.statuses/") -> R.string.kind_statuses
+            e.lower.contains("voice notes") || e.lower.contains("/voice/") -> R.string.kind_voice
+            e.lower.contains("stickers") -> R.string.kind_stickers
+            e.ext in IMAGE_EXT -> R.string.kind_images
+            e.ext in VIDEO_EXT -> R.string.kind_videos
+            e.ext in AUDIO_EXT -> R.string.kind_audio
+            e.ext in DOC_EXT -> R.string.kind_documents
+            else -> R.string.kind_other
+        }
+    )
+
+    companion object {
+        private val MEDIA_ROOTS = setOf("pictures", "movies", "dcim", "download", "documents", "music", "recordings")
+
+        val SOCIAL_FOLDERS = mapOf(
+            "whatsapp" to "WhatsApp",
+            "whatsapp business" to "WhatsApp Business",
+            "facebook" to "Facebook",
+            "messenger" to "Messenger",
+            "instagram" to "Instagram",
+            "threads" to "Threads",
+            "telegram" to "Telegram",
+            "telegram x" to "Telegram X",
+            "tiktok" to "TikTok",
+            "snapchat" to "Snapchat",
+            "twitter" to "X (Twitter)",
+            "viber" to "Viber",
+            "imo" to "imo",
+            "signal" to "Signal",
+            "pinterest" to "Pinterest",
+            "reddit" to "Reddit",
+            "likee" to "Likee",
+            "discord" to "Discord",
+        )
+
+        val SOCIAL_PACKAGES = mapOf(
+            "com.whatsapp" to "WhatsApp",
+            "com.whatsapp.w4b" to "WhatsApp Business",
+            "com.facebook.katana" to "Facebook",
+            "com.facebook.lite" to "Facebook",
+            "com.facebook.orca" to "Messenger",
+            "com.facebook.mlite" to "Messenger",
+            "com.instagram.android" to "Instagram",
+            "com.instagram.lite" to "Instagram",
+            "com.instagram.barcelona" to "Threads",
+            "org.telegram.messenger" to "Telegram",
+            "org.telegram.messenger.web" to "Telegram",
+            "org.thunderdog.challegram" to "Telegram X",
+            "org.telegram.plus" to "Telegram",
+            "com.zhiliaoapp.musically" to "TikTok",
+            "com.ss.android.ugc.trill" to "TikTok",
+            "com.zhiliaoapp.musically.go" to "TikTok",
+            "com.snapchat.android" to "Snapchat",
+            "com.twitter.android" to "X (Twitter)",
+            "com.viber.voip" to "Viber",
+            "com.imo.android.imoim" to "imo",
+            "com.imo.android.imoimlite" to "imo",
+            "org.thoughtcrime.securesms" to "Signal",
+            "com.pinterest" to "Pinterest",
+            "com.reddit.frontpage" to "Reddit",
+            "video.like" to "Likee",
+            "com.discord" to "Discord",
+            "com.linkedin.android" to "LinkedIn",
+            "jp.naver.line.android" to "LINE",
+            "com.tencent.mm" to "WeChat",
+        )
     }
 
     private fun typeLabel(ext: String): String = when (ext) {

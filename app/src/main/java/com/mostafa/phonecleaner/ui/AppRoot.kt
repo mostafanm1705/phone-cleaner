@@ -1,6 +1,12 @@
 package com.mostafa.phonecleaner.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,8 +63,30 @@ sealed interface Screen {
 }
 
 @Composable
-fun AppRoot(vm: MainViewModel = viewModel()) {
+fun AppRoot(
+    startScanRequested: Boolean = false,
+    onStartScanHandled: () -> Unit = {},
+    vm: MainViewModel = viewModel(),
+) {
     val ctx = LocalContext.current
+
+    // Ask for notification permission (Android 13+) once storage access is granted.
+    val notifLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    LaunchedEffect(vm.hasAllFiles) {
+        if (vm.hasAllFiles && Build.VERSION.SDK_INT >= 33 &&
+            ContextCompat.checkSelfPermission(ctx, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            notifLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
+    // Opened from a "Scan now" notification
+    LaunchedEffect(startScanRequested, vm.hasAllFiles) {
+        if (startScanRequested && vm.hasAllFiles) {
+            vm.startScan()
+            onStartScanHandled()
+        }
+    }
     val owner = LocalLifecycleOwner.current
     DisposableEffect(owner) {
         val obs = LifecycleEventObserver { _, e ->

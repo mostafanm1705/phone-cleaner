@@ -66,6 +66,9 @@ import com.mostafa.phonecleaner.apps.AppInfo
 import com.mostafa.phonecleaner.device.DeviceHealth
 import com.mostafa.phonecleaner.device.Status
 import com.mostafa.phonecleaner.util.Perms
+import com.mostafa.phonecleaner.util.launch
+import com.mostafa.phonecleaner.notify.Notifier
+import com.mostafa.phonecleaner.notify.Reminder
 import com.mostafa.phonecleaner.util.dateText
 import com.mostafa.phonecleaner.util.sizeText
 
@@ -363,6 +366,9 @@ fun SettingsScreen(vm: MainViewModel, onBack: () -> Unit) {
             }
 
             HorizontalDivider(Modifier.padding(vertical = 12.dp))
+            NotificationSettings(vm)
+
+            HorizontalDivider(Modifier.padding(vertical = 12.dp))
             SectionTitle(stringResource(R.string.trash_title))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
@@ -413,6 +419,101 @@ fun SettingsScreen(vm: MainViewModel, onBack: () -> Unit) {
             )
             Spacer(Modifier.height(32.dp))
         }
+    }
+}
+
+@Composable
+private fun SwitchRow(title: String, desc: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(title)
+            Text(desc, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        Spacer(Modifier.width(12.dp))
+        Switch(checked = checked, onCheckedChange = onChange)
+    }
+}
+
+@Composable
+private fun NotificationSettings(vm: MainViewModel) {
+    val ctx = LocalContext.current
+    var activity by remember { mutableStateOf(vm.prefs.activityNotifications) }
+    var reminder by remember { mutableStateOf(vm.prefs.reminderEnabled) }
+    var hour by remember { mutableIntStateOf(vm.prefs.reminderHour) }
+    var minute by remember { mutableIntStateOf(vm.prefs.reminderMinute) }
+    var lowAlert by remember { mutableStateOf(vm.prefs.lowStorageAlert) }
+    var allowed by remember { mutableStateOf(Notifier.canNotify(ctx)) }
+
+    val owner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(owner) {
+        val obs = androidx.lifecycle.LifecycleEventObserver { _, e ->
+            if (e == androidx.lifecycle.Lifecycle.Event.ON_RESUME) allowed = Notifier.canNotify(ctx)
+        }
+        owner.lifecycle.addObserver(obs)
+        onDispose { owner.lifecycle.removeObserver(obs) }
+    }
+
+    val timeText = remember(hour, minute) {
+        val cal = java.util.Calendar.getInstance().apply {
+            set(java.util.Calendar.HOUR_OF_DAY, hour)
+            set(java.util.Calendar.MINUTE, minute)
+        }
+        android.text.format.DateFormat.getTimeFormat(ctx).format(cal.time)
+    }
+
+    SectionTitle(stringResource(R.string.notifications))
+    if (!allowed) {
+        InfoNote(stringResource(R.string.notif_off_warning))
+        TextButton(onClick = {
+            ctx.launch(
+                android.content.Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, ctx.packageName)
+            )
+        }) { Text(stringResource(R.string.allow_notifications)) }
+    }
+    SwitchRow(stringResource(R.string.notif_activity), stringResource(R.string.notif_activity_desc), activity) {
+        activity = it
+        vm.prefs.activityNotifications = it
+    }
+    SwitchRow(
+        stringResource(R.string.daily_reminder),
+        stringResource(R.string.daily_reminder_desc, timeText),
+        reminder
+    ) {
+        reminder = it
+        vm.prefs.reminderEnabled = it
+        Reminder.schedule(ctx)
+    }
+    if (reminder) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(stringResource(R.string.reminder_time), Modifier.weight(1f))
+            TextButton(onClick = {
+                android.app.TimePickerDialog(
+                    ctx,
+                    { _, h, m ->
+                        hour = h
+                        minute = m
+                        vm.prefs.reminderHour = h
+                        vm.prefs.reminderMinute = m
+                        Reminder.schedule(ctx)
+                    },
+                    hour, minute, android.text.format.DateFormat.is24HourFormat(ctx)
+                ).show()
+            }) { Text(timeText, fontWeight = FontWeight.SemiBold) }
+        }
+    }
+    SwitchRow(stringResource(R.string.low_storage_alert), stringResource(R.string.low_storage_desc), lowAlert) {
+        lowAlert = it
+        vm.prefs.lowStorageAlert = it
+    }
+    InfoNote(stringResource(R.string.samsung_sleep_note))
+    TextButton(onClick = { Perms.openAppDetails(ctx, ctx.packageName) }) {
+        Text(stringResource(R.string.open_app_settings))
     }
 }
 
