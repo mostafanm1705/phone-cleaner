@@ -54,6 +54,7 @@ import com.mostafa.phonecleaner.util.sizeText
 
 sealed interface Screen {
     data object Home : Screen
+    data object Report : Screen
     data class Files(val category: Category) : Screen
     data class Apps(val tab: Int) : Screen
     data object PermissionAudit : Screen
@@ -66,6 +67,8 @@ sealed interface Screen {
 fun AppRoot(
     startScanRequested: Boolean = false,
     onStartScanHandled: () -> Unit = {},
+    openReportRequested: Boolean = false,
+    onOpenReportHandled: () -> Unit = {},
     vm: MainViewModel = viewModel(),
 ) {
     val ctx = LocalContext.current
@@ -118,6 +121,15 @@ fun AppRoot(
     val back: () -> Unit = { if (stack.size > 1) stack = stack.dropLast(1) }
     BackHandler(enabled = stack.size > 1) { back() }
 
+    // Scan finished (in the app or from the notification): open the report
+    LaunchedEffect(vm.reportRequest, openReportRequested, vm.scanned) {
+        if ((vm.reportRequest || openReportRequested) && vm.scanned) {
+            stack = listOf(Screen.Home, Screen.Report)
+            vm.reportRequest = false
+            onOpenReportHandled()
+        }
+    }
+
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Box(Modifier.fillMaxSize()) {
             if (!vm.hasAllFiles) {
@@ -125,6 +137,7 @@ fun AppRoot(
             } else {
                 when (val s = stack.last()) {
                     Screen.Home -> HomeScreen(vm, nav)
+                    Screen.Report -> ReportScreen(vm, nav, back)
                     is Screen.Files -> CategoryScreen(vm, s.category, back)
                     is Screen.Apps -> AppsScreen(vm, s.tab, back)
                     Screen.PermissionAudit -> PermissionAuditScreen(vm, back)

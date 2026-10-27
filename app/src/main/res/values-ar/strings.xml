@@ -284,4 +284,23 @@
     <string name="low_storage_desc">نبّهني لما المساحة الفاضية تقل عن 15 في المية.</string>
     <string name="samsung_sleep_note">سامسونج ممكن تنيّم التطبيقات. عشان التذكير يوصل في معاده دايماً، افتح إعدادات التطبيق › البطارية واختار غير مقيّد.</string>
     <string name="open_app_settings">افتح إعدادات التطبيق</string>
+
+    <!-- report -->
+    <string name="report_title">تقرير الفحص</string>
+    <string name="report_open">افتح تقرير الفحص</string>
+    <string name="report_sub">اللي اتلقى واللي ممكن تمسحه</string>
+    <string name="report_last">آخر فحص: %1$s</string>
+    <string name="partial_note">دي أول النتايج. التطبيق لسه بيفحص الملفات المتكررة والصور، والقايمة هتتحدث لوحدها.</string>
+    <string name="report_found">لقى %1$d ملف • %2$s</string>
+    <string name="report_safe">ممكن يتمسح بأمان دلوقتي</string>
+    <string name="report_social">سوشيال ميديا تراجعها</string>
+    <string name="report_storage">المساحة المستخدمة</string>
+    <string name="report_clean_safe">نضّف العناصر الآمنة (%1$s)</string>
+    <string name="report_clean_phone">الموبايل نضيف. مفيش حاجة تتمسح.</string>
+    <string name="report_section_safe">مقترح تمسحه</string>
+    <string name="report_section_safe_desc">مالهاش لازمة ومسحها آمن. دوس على أي سطر عشان تشوف كل الملفات قبل ما تمسح.</string>
+    <string name="report_row_safe">%1$d ملف للحذف • %2$s</string>
+    <string name="report_section_review">محتاج قرارك</string>
+    <string name="report_section_review_desc">ممكن تكون مالهاش لازمة، بس انت اللي تقرر. دوس على السطر، اختار اللي تمسحه وسيب الباقي.</string>
+    <string name="n_action_report">اعرض التقرير</string>
 </resources>

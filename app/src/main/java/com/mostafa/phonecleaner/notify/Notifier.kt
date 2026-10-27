@@ -34,6 +34,7 @@ object Notifier {
     private const val ID_TRASH = 1006
 
     const val EXTRA_START_SCAN = "start_scan"
+    const val EXTRA_OPEN_REPORT = "open_report"
 
     /** Percent of free storage under which the phone "needs cleaning". */
     const val LOW_STORAGE_PCT = 15
@@ -57,12 +58,18 @@ object Notifier {
         return NotificationManagerCompat.from(ctx).areNotificationsEnabled()
     }
 
-    private fun openApp(ctx: Context, startScan: Boolean): PendingIntent {
+    private fun openApp(ctx: Context, startScan: Boolean, openReport: Boolean = false): PendingIntent {
         val intent = Intent(ctx, MainActivity::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             .putExtra(EXTRA_START_SCAN, startScan)
+            .putExtra(EXTRA_OPEN_REPORT, openReport)
+        val code = when {
+            startScan -> 1
+            openReport -> 2
+            else -> 0
+        }
         return PendingIntent.getActivity(
-            ctx, if (startScan) 1 else 0, intent,
+            ctx, code, intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
@@ -132,7 +139,10 @@ object Notifier {
     fun scanDone(ctx: Context, results: Map<Category, List<FileItem>>, storage: StorageInfo) {
         cancel(ctx, ID_SCAN)
         if (!activityOn(ctx)) return
-        post(ctx, ID_RESULT, builder(ctx, CH_ACTIVITY, ctx.getString(R.string.n_scan_done_title), summary(ctx, results, storage)))
+        val b = builder(ctx, CH_ACTIVITY, ctx.getString(R.string.n_scan_done_title), summary(ctx, results, storage))
+            .setContentIntent(openApp(ctx, false, openReport = true))
+            .addAction(0, ctx.getString(R.string.n_action_report), openApp(ctx, false, openReport = true))
+        post(ctx, ID_RESULT, b)
     }
 
     fun scanFailed(ctx: Context) {

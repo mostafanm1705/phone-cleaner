@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Assessment
+import com.mostafa.phonecleaner.util.dateTimeText
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.BatteryAlert
 import androidx.compose.material.icons.filled.BlurOn
@@ -120,9 +122,24 @@ fun HomeScreen(vm: MainViewModel, nav: (Screen) -> Unit) {
             }
 
             if (vm.scanned && !vm.scanning) {
+                item {
+                    NavRow(
+                        Icons.Filled.Assessment,
+                        stringResource(R.string.report_open),
+                        if (vm.lastScanTime > 0) stringResource(R.string.report_last, dateTimeText(vm.lastScanTime))
+                        else stringResource(R.string.report_sub),
+                        tint = MaterialTheme.colorScheme.primary
+                    ) { nav(Screen.Report) }
+                }
+            }
+
+            if (vm.scanned) {
                 val quick = vm.quickCleanItems()
                 val quickSize = quick.sumOf { it.size }
-                if (quick.isNotEmpty()) {
+                if (vm.scanning) {
+                    item { InfoNote(stringResource(R.string.partial_note)) }
+                }
+                if (quick.isNotEmpty() && !vm.scanning) {
                     item {
                         Card(
                             Modifier.fillMaxWidth(),
@@ -230,11 +247,17 @@ fun HomeScreen(vm: MainViewModel, nav: (Screen) -> Unit) {
         }
     }
 
-    if (confirmQuick) {
+    if (confirmQuick) QuickCleanDialog(vm) { confirmQuick = false }
+}
+
+@Composable
+fun QuickCleanDialog(vm: MainViewModel, onDismiss: () -> Unit) {
+    val ctx = LocalContext.current
+    run {
         val items = vm.quickCleanItems()
         var permanent by remember { mutableStateOf(!vm.prefs.useTrash) }
         AlertDialog(
-            onDismissRequest = { confirmQuick = false },
+            onDismissRequest = { onDismiss() },
             title = { Text(stringResource(R.string.quick_confirm_title)) },
             text = {
                 Column {
@@ -253,12 +276,12 @@ fun HomeScreen(vm: MainViewModel, nav: (Screen) -> Unit) {
             },
             confirmButton = {
                 TextButton(onClick = {
-                    confirmQuick = false
+                    onDismiss()
                     vm.delete(items, permanent)
                 }) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                TextButton(onClick = { confirmQuick = false }) { Text(stringResource(R.string.cancel)) }
+                TextButton(onClick = { onDismiss() }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }

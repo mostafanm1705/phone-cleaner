@@ -7,6 +7,7 @@ import com.mostafa.phonecleaner.Prefs
 import com.mostafa.phonecleaner.R
 import com.mostafa.phonecleaner.trash.TrashManager
 import com.mostafa.phonecleaner.util.DAY_MS
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -40,7 +41,11 @@ class StorageScanner(private val ctx: Context, private val prefs: Prefs) {
     /**
      * @param light skip duplicate hashing and photo analysis (used by the nightly background check)
      */
-    suspend fun scan(light: Boolean = false, onProgress: (ScanProgress) -> Unit): Map<Category, List<FileItem>> =
+    suspend fun scan(
+        light: Boolean = false,
+        onPartial: (Map<Category, List<FileItem>>) -> Unit = {},
+        onProgress: (ScanProgress) -> Unit,
+    ): Map<Category, List<FileItem>> =
         withContext(Dispatchers.IO) {
             val out = HashMap<Category, MutableList<FileItem>>()
             Category.entries.forEach { out[it] = mutableListOf() }
@@ -192,15 +197,22 @@ class StorageScanner(private val ctx: Context, private val prefs: Prefs) {
                 }
             }
 
-            if (light) {
-                out.getValue(Category.JUNK).sortByDescending { it.size }
-                out.getValue(Category.SOCIAL).sortByDescending { it.size }
-                return@withContext out
-            }
+            out.getValue(Category.JUNK).sortByDescending { it.size }
+            out.getValue(Category.APKS).sortByDescending { it.size }
+            out.getValue(Category.LARGE).sortByDescending { it.size }
+            out.getValue(Category.SOCIAL).sortByDescending { it.size }
+            out.getValue(Category.LEFTOVERS).sortByDescending { it.size }
+            out.getValue(Category.SCREENSHOTS).sortBy { it.modified }
+            out.getValue(Category.EMPTY_FOLDERS).sortBy { it.path }
+            if (light) return@withContext out
+
+            // first results are ready: show them while the slower checks continue
+            onPartial(out.mapValues { it.value.toList() })
 
             // ---------- 5. exact duplicates ----------
             onProgress(ScanProgress(ScanPhase.DUPLICATES, 0, 0))
             val dupPaths = HashSet<String>()
+            try {
             val sameSize = files.asSequence()
                 .filter { it.size >= 4096 && it.path !in excluded }
                 .groupBy { it.size }
@@ -234,7 +246,14 @@ class StorageScanner(private val ctx: Context, private val prefs: Prefs) {
                     }
                 }
             }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                // keep whatever was found so far
+            }
+            onPartial(out.mapValues { it.value.toList() })
 
+            try {
             // ---------- 6. photo analysis ----------
             val cache = ImageCache(ctx)
             cache.load()
@@ -334,16 +353,13 @@ class StorageScanner(private val ctx: Context, private val prefs: Prefs) {
                 }
                 simId++
             }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                // photo checks failed: the other results are still valid
+            }
 
-            // ---------- sorting ----------
-            out.getValue(Category.JUNK).sortByDescending { it.size }
-            out.getValue(Category.APKS).sortByDescending { it.size }
-            out.getValue(Category.LARGE).sortByDescending { it.size }
-            out.getValue(Category.SOCIAL).sortByDescending { it.size }
-            out.getValue(Category.LEFTOVERS).sortByDescending { it.size }
             out.getValue(Category.LOW_RES).sortByDescending { it.size }
-            out.getValue(Category.SCREENSHOTS).sortBy { it.modified }
-            out.getValue(Category.EMPTY_FOLDERS).sortBy { it.path }
             out
         }
 

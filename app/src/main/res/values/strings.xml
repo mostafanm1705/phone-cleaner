@@ -284,4 +284,23 @@
     <string name="low_storage_desc">Warn when free storage drops under 15 percent.</string>
     <string name="samsung_sleep_note">Samsung may put apps to sleep. So the reminder always arrives on time, open the app settings › Battery and choose Unrestricted.</string>
     <string name="open_app_settings">Open app settings</string>
+
+    <!-- report -->
+    <string name="report_title">Scan report</string>
+    <string name="report_open">Open scan report</string>
+    <string name="report_sub">What was found and what you can delete</string>
+    <string name="report_last">Last scan: %1$s</string>
+    <string name="partial_note">These are the first results. The app is still checking duplicates and photos; the list updates by itself.</string>
+    <string name="report_found">Found %1$d files • %2$s</string>
+    <string name="report_safe">Safe to delete now</string>
+    <string name="report_social">Social media to review</string>
+    <string name="report_storage">Storage used</string>
+    <string name="report_clean_safe">Clean safe items (%1$s)</string>
+    <string name="report_clean_phone">Your phone is clean. Nothing to delete.</string>
+    <string name="report_section_safe">Recommended to delete</string>
+    <string name="report_section_safe_desc">Not needed and safe to remove. Tap a row to see every file before deleting.</string>
+    <string name="report_row_safe">%1$d files to delete • %2$s</string>
+    <string name="report_section_review">Needs your decision</string>
+    <string name="report_section_review_desc">These may be not needed, but only you can decide. Tap a row, pick what to delete and keep the rest.</string>
+    <string name="n_action_report">View report</string>
 </resources>

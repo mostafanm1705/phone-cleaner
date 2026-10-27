@@ -18,6 +18,7 @@ import com.mostafa.phonecleaner.scan.Category
 import com.mostafa.phonecleaner.scan.FileItem
 import com.mostafa.phonecleaner.scan.ScanPhase
 import com.mostafa.phonecleaner.scan.ScanProgress
+import com.mostafa.phonecleaner.scan.ResultStore
 import com.mostafa.phonecleaner.scan.StorageScanner
 import com.mostafa.phonecleaner.scan.quickCleanItems
 import com.mostafa.phonecleaner.trash.TrashEntry
@@ -67,6 +68,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         private set
     var message by mutableStateOf<UiMessage?>(null)
 
+    /** Time of the scan whose results are shown (0 = never scanned). */
+    var lastScanTime by mutableStateOf(0L)
+        private set
+
+    /** Set when a scan finishes: the UI opens the report and resets it. */
+    var reportRequest by mutableStateOf(false)
+
+    private val resultStore = ResultStore(app)
     private var scanJob: Job? = null
 
     init {
@@ -81,6 +90,15 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             } catch (_: Exception) {
             }
             loadTrashNow()
+        }
+        // show the last report right away, even after the app was closed
+        viewModelScope.launch {
+            val saved = withContext(Dispatchers.IO) { resultStore.load() }
+            if (saved != null && !scanned) {
+                results = saved.first
+                lastScanTime = saved.second
+                scanned = true
+            }
         }
         Notifier.lowStorage(app, DeviceHealth.storage())
     }
@@ -123,22 +141,40 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             lastProgressNotif = 0L
             onProgress(ScanProgress(ScanPhase.FILES, 0, 0))
             try {
-                val r = StorageScanner(ctx, prefs).scan { onProgress(it) }
+                val r = StorageScanner(ctx, prefs).scan(onPartial = { partial ->
+                    viewModelScope.launch(Dispatchers.Main) {
+                        results = partial
+                        scanned = true
+                        lastScanTime = System.currentTimeMillis()
+                    }
+                    // keep the partial report even if the app is closed before the scan ends
+                    resultStore.save(partial, System.currentTimeMillis())
+                }) { onProgress(it) }
                 results = r
                 scanned = true
+                lastScanTime = System.currentTimeMillis()
                 lastProgressNotif = 0L
                 onProgress(ScanProgress(ScanPhase.APPS, 0, 0))
-                apps = withContext(Dispatchers.IO) { AppAnalyzer.load(ctx) }
-                appsLoaded = true
+                try {
+                    apps = withContext(Dispatchers.IO) { AppAnalyzer.load(ctx) }
+                    appsLoaded = true
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                }
                 refreshStorage()
+                val time = lastScanTime
+                withContext(Dispatchers.IO) { resultStore.save(r, time) }
                 Notifier.scanDone(ctx, r, storage)
                 Notifier.lowStorage(ctx, storage)
+                reportRequest = true
             } catch (e: CancellationException) {
                 Notifier.cancel(ctx, Notifier.ID_SCAN)
                 throw e
             } catch (e: Exception) {
                 message = UiMessage(R.string.scan_failed)
                 Notifier.scanFailed(ctx)
+                if (results.isNotEmpty()) reportRequest = true
             } finally {
                 scanning = false
                 progress.value = null
@@ -214,6 +250,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 val bytes = unique.filter { it.path in removedSet }.sumOf { it.size }
                 message = if (permanent) UiMessage(R.string.msg_deleted, bytes) else UiMessage(R.string.msg_trashed, bytes)
                 if (removed.isNotEmpty()) Notifier.cleaned(ctx, bytes, removed.size, permanent, prefs.trashDays)
+                val snapshot = results
+                val time = lastScanTime
+                withContext(Dispatchers.IO) { resultStore.save(snapshot, time) }
                 refreshStorage()
                 loadTrashNow()
             } finally {

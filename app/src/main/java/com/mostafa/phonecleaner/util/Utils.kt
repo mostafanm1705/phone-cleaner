@@ -24,6 +24,9 @@ fun Context.sizeText(bytes: Long): String = Formatter.formatShortFileSize(this, 
 fun dateText(ms: Long): String =
     if (ms <= 0) "-" else DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(ms))
 
+fun dateTimeText(ms: Long): String =
+    if (ms <= 0) "-" else DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(ms))
+
 fun durationText(ctx: Context, ms: Long): String {
     val totalMin = ms / 60_000
     val h = totalMin / 60

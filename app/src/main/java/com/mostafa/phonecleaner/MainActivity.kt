@@ -15,6 +15,9 @@ class MainActivity : AppCompatActivity() {
     /** Set when the app is opened from a "Scan now" notification. */
     private val startScanRequest = mutableStateOf(false)
 
+    /** Set when the app is opened from the "scan finished" notification. */
+    private val openReportRequest = mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,7 +26,9 @@ class MainActivity : AppCompatActivity() {
             CleanerTheme {
                 AppRoot(
                     startScanRequested = startScanRequest.value,
-                    onStartScanHandled = { startScanRequest.value = false }
+                    onStartScanHandled = { startScanRequest.value = false },
+                    openReportRequested = openReportRequest.value,
+                    onOpenReportHandled = { openReportRequest.value = false }
                 )
             }
         }
@@ -39,6 +44,10 @@ class MainActivity : AppCompatActivity() {
         if (intent?.getBooleanExtra(Notifier.EXTRA_START_SCAN, false) == true) {
             startScanRequest.value = true
             intent.removeExtra(Notifier.EXTRA_START_SCAN)
+        }
+        if (intent?.getBooleanExtra(Notifier.EXTRA_OPEN_REPORT, false) == true) {
+            openReportRequest.value = true
+            intent.removeExtra(Notifier.EXTRA_OPEN_REPORT)
         }
     }
 }
