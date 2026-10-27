@@ -1,0 +1,54 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Build release APK
+        run: |
+          set -o pipefail
+          gradle assembleRelease --no-daemon 2>&1 | tee build.log
+
+      - name: Upload build log on failure
+        if: failure()
+        run: |
+          mkdir -p /tmp/ci-logs && cd /tmp/ci-logs
+          git init -q -b ci-logs
+          cp "$GITHUB_WORKSPACE/build.log" .
+          grep -nE "^e: |error:|FAILED|What went wrong" -A4 build.log > errors.txt || true
+          git add .
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "build log ${{ github.run_number }}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ci-logs
+
+      - name: Prepare APK
+        run: cp app/build/outputs/apk/release/app-release.apk PhoneCleaner.apk
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Phone Cleaner 1.0.${{ github.run_number }}
+          files: PhoneCleaner.apk
+          make_latest: true
+          body: |
+            Direct download (always the newest build):
+            https://github.com/${{ github.repository }}/releases/latest/download/PhoneCleaner.apk

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">منظف الموبايل</string>
+
+    <!-- general -->
+    <string name="back">رجوع</string>
+    <string name="settings">الإعدادات</string>
+    <string name="cancel">إلغاء</string>
+    <string name="delete">حذف</string>
+    <string name="close">إغلاق</string>
+    <string name="all">الكل</string>
+    <string name="on">مفعّل</string>
+    <string name="off">مقفول</string>
+    <string name="manage">إدارة</string>
+    <string name="uninstall">إزالة</string>
+    <string name="restore">استرجاع</string>
+    <string name="open_with">فتح بواسطة…</string>
+    <string name="cannot_open">مش قادر يفتح العنصر ده</string>
+    <string name="grant_access">إعطاء الإذن</string>
+    <string name="nothing_found">مفيش حاجة</string>
+    <string name="n_items">%1$d عنصر</string>
+    <string name="n_items_size">%1$d عنصر • %2$s</string>
+    <string name="n_days">%1$d يوم</string>
+    <string name="dur_hm">%1$d س %2$d د</string>
+    <string name="dur_m">%1$d دقيقة</string>
+    <string name="days_hours">%1$d يوم %2$d ساعة</string>
+    <string name="free_of">%1$s فاضي من %2$s</string>
+    <string name="mah_value">≈ %1$d مللي أمبير</string>
+    <string name="charging">بيشحن</string>
+
+    <!-- permissions -->
+    <string name="perm_files_explain">عشان التطبيق يفحص مساحة الموبايل ويلاقي الملفات اللي مالهاش لازمة والمتكررة والصور المهزوزة، محتاج إذن \"الوصول لكل الملفات\". دوس على الزرار وفعّل الإذن لـ منظف الموبايل.</string>
+    <string name="perm_privacy">كل التحليل بيحصل على الموبايل نفسه. مفيش أي حاجة بتترفع على النت، ومفيش حاجة بتتمسح من غير موافقتك.</string>
+    <string name="perm_usage_explain">عشان تعرف التطبيقات اللي بتستهلك البطارية، والتطبيقات اللي مبقتش بتستخدمها، وحجم الكاش بتاع كل تطبيق، فعّل إذن \"الوصول لبيانات الاستخدام\" لـ منظف الموبايل.</string>
+
+    <!-- home -->
+    <string name="storage_title">مساحة التخزين</string>
+    <string name="storage_used">مستخدم %1$s من %2$s</string>
+    <string name="storage_free">%1$s فاضي</string>
+    <string name="scan_intro">فحص كامل للموبايل: ملفات مالهاش لازمة، ملفات متكررة، صور مهزوزة، سكرينشوتات قديمة، ميديا واتساب، بواقي تطبيقات اتمسحت، وغيرهم. وانت اللي بتقرر إيه اللي يتمسح.</string>
+    <string name="scan_done">الفحص خلص. افتح كل قسم وراجع اللي اتلقى.</string>
+    <string name="scan_full">ابدأ الفحص الكامل</string>
+    <string name="rescan">افحص تاني</string>
+    <string name="scan_failed">الفحص فشل. جرّب تاني.</string>
+    <string name="phase_files">بيفحص الملفات… %1$d</string>
+    <string name="phase_duplicates">بيدور على الملفات المتكررة…</string>
+    <string name="phase_images">بيحلل الصور %1$d / %2$d</string>
+    <string name="phase_apps">بيحلل التطبيقات…</string>
+    <string name="quick_title">%1$s ممكن تتمسح بأمان</string>
+    <string name="quick_desc">ملفات مالهاش لازمة، فولدرات فاضية، ملفات APK لتطبيقات متسطبة، بواقي تطبيقات اتمسحت، والنسخ الزيادة من الملفات المتكررة.</string>
+    <string name="quick_button">مراجعة وتنظيف</string>
+    <string name="quick_confirm_title">تنظيف العناصر الآمنة؟</string>
+    <string name="section_files">التخزين</string>
+    <string name="section_apps">التطبيقات</string>
+    <string name="section_device">الجهاز</string>
+
+    <!-- categories -->
+    <string name="cat_junk">ملفات مالهاش لازمة</string>
+    <string name="cat_junk_desc">ملفات مؤقتة، سجلات، كاش الصور المصغرة، وملفات فاضية. ده طبيعي، أي موبايل بيجمعهم مع الوقت. مسحهم آمن، والصور المصغرة بتتعمل تاني لوحدها لما تحتاجها.</string>
+    <string name="cat_empty">فولدرات فاضية</string>
+    <string name="cat_empty_desc">فولدرات مفيهاش أي ملفات. مسحها آمن، وفولدرات النظام مش بتظهر هنا أصلاً.</string>
+    <string name="cat_apks">ملفات APK</string>
+    <string name="cat_apks_desc">ملفات تسطيب التطبيقات. لو التطبيق متسطب أصلاً (نفس النسخة أو أحدث) يبقى الملف ملوش لازمة. سيب ملفات التطبيقات اللي ناوي تسطبها بعدين.</string>
+    <string name="cat_leftovers">بواقي تطبيقات اتمسحت</string>
+    <string name="cat_leftovers_desc">فولدرات فضلت بعد ما التطبيق بتاعها اتمسح. الفولدرات الكبيرة مش متعلّم عليها لأنها ممكن يكون فيها صور أو فيديوهات عايزها.</string>
+    <string name="cat_duplicates">ملفات متكررة</string>
+    <string name="cat_duplicates_desc">ملفات محتواها متطابق بالظبط. في كل مجموعة نسخة واحدة عليها \"احتفظ\" (الأصلية)، والنسخ الزيادة متعلّم عليها للحذف.</string>
+    <string name="cat_similar">صور متشابهة</string>
+    <string name="cat_similar_desc">صور متصورة ورا بعض أو شبه متطابقة. أوضح صورة في كل مجموعة بتفضل، والباقي متعلّم عليه. دوس على الصورة عشان تقارن.</string>
+    <string name="cat_blurry">صور مهزوزة ومش واضحة</string>
+    <string name="cat_blurry_desc">صور فيها تفاصيل واضحة قليلة جداً (مهزوزة، مش متظبطة، أو اتصورت بالغلط في الجيب). المهزوزة جداً متعلّم عليها. دوس على الصورة وشوفها الأول، لأن الصور السادة أو الضلمة ممكن تظهر هنا برضه.</string>
+    <string name="cat_lowres">صور مبكسلة وجودتها ضعيفة</string>
+    <string name="cat_lowres_desc">صور صغيرة ومبكسلة (أقل من 0.3 ميجابكسل)، غالباً نسخ متحولة أو متحملة من النت.</string>
+    <string name="cat_screenshots">سكرينشوتات قديمة</string>
+    <string name="cat_screenshots_desc">سكرينشوتات وتسجيلات شاشة أقدم من المدة اللي في الإعدادات. غالباً مبقاش ليها لازمة.</string>
+    <string name="cat_whatsapp">ميديا واتساب</string>
+    <string name="cat_whatsapp_desc">صور وفيديوهات وفويسات وملفات جاتلك أو بعتها على واتساب. استخدم الفلاتر عشان تنضف نوع نوع. مفيش حاجة متعلّم عليها.</string>
+    <string name="cat_large">ملفات كبيرة</string>
+    <string name="cat_large_desc">ملفات أكبر من الحجم اللي في الإعدادات. مفيش حاجة متعلّم عليها، شوف إيه اللي مبقاش ليه لازمة.</string>
+
+    <!-- reasons -->
+    <string name="reason_thumbnails">كاش صور مصغرة</string>
+    <string name="reason_temp">ملف مؤقت / تحميل مكملش</string>
+    <string name="reason_log">ملف سجل</string>
+    <string name="reason_empty_file">ملف فاضي (0 بايت)</string>
+    <string name="reason_cache">ملف كاش</string>
+    <string name="reason_empty_folder">فولدر فاضي</string>
+    <string name="reason_leftover">من تطبيق اتمسح: %1$s</string>
+    <string name="reason_dup_keep">النسخة الأصلية، هتفضل</string>
+    <string name="reason_dup_copy">نسخة من %1$s</string>
+    <string name="reason_lowres">الدقة %1$s</string>
+    <string name="reason_blurry">مهزوزة (الوضوح %1$s)</string>
+    <string name="reason_very_blurry">مهزوزة جداً (الوضوح %1$s)</string>
+    <string name="reason_similar_best">أوضح صورة في المجموعة</string>
+    <string name="reason_similar">شبه %1$s</string>
+    <string name="reason_apk_broken">ملف تسطيب بايظ</string>
+    <string name="reason_apk_installed">%1$s متسطب أصلاً</string>
+    <string name="reason_apk_newer">%1$s: أحدث من النسخة المتسطبة</string>
+    <string name="reason_apk_not_installed">%1$s مش متسطب</string>
+    <string name="wa_sent">مبعوت</string>
+    <string name="wa_private">خاص</string>
+    <string name="type_image">صورة</string>
+    <string name="type_video">فيديو</string>
+    <string name="type_audio">صوت</string>
+    <string name="type_archive">ملف مضغوط</string>
+    <string name="type_document">مستند</string>
+    <string name="type_other">أخرى</string>
+
+    <!-- review list -->
+    <string name="tag_suggested">احذف</string>
+    <string name="tag_keep">احتفظ</string>
+    <string name="tag_review">راجع</string>
+    <string name="select_suggested">المقترح</string>
+    <string name="select_all">تحديد الكل</string>
+    <string name="select_none">إلغاء التحديد</string>
+    <string name="group_n">مجموعة %1$d • %2$d ملف</string>
+    <string name="delete_selected">حذف %1$d • %2$s</string>
+    <string name="confirm_delete_title">حذف العناصر المحددة؟</string>
+    <string name="confirm_delete_body">هيتمسح %1$d عنصر (%2$s).</string>
+    <string name="warn_keep_selected">انت محدد نسخة عليها \"احتفظ\". لو كل نسخ الملف متحددة، الملف هيتمسح خالص.</string>
+    <string name="delete_permanently">حذف نهائي</string>
+    <string name="permanent_note">المساحة هتفضى دلوقتي، ومينفعش ترجعهم تاني.</string>
+    <string name="trash_note">هيتنقلوا لسلة التطبيق الأول عشان تقدر ترجعهم. المساحة بتفضى لما السلة تتفضى.</string>
+    <string name="msg_trashed">%1$s اتنقلوا للسلة</string>
+    <string name="msg_deleted">%1$s اتمسحوا</string>
+    <string name="msg_restored">%1$d عنصر رجعوا</string>
+
+    <!-- apps -->
+    <string name="apps_title">التطبيقات</string>
+    <string name="apps_battery">استهلاك البطارية</string>
+    <string name="apps_battery_sub">%1$d تطبيق نشاطهم في الخلفية عالي</string>
+    <string name="apps_battery_hint">التطبيقات اللي بتفضل شغالة في الخلفية</string>
+    <string name="apps_unused">تطبيقات مش بتستخدمها</string>
+    <string name="apps_unused_sub">%1$d تطبيق مفتحتهمش من %2$d يوم</string>
+    <string name="apps_unused_hint">تطبيقات مفتحتهاش من فترة طويلة</string>
+    <string name="apps_cache">كاش التطبيقات</string>
+    <string name="apps_cache_sub">%1$s كاش في كل التطبيقات</string>
+    <string name="apps_cache_hint">حجم الكاش اللي كل تطبيق محتفظ بيه</string>
+    <string name="tab_battery">البطارية</string>
+    <string name="tab_unused">مش مستخدمة</string>
+    <string name="tab_cache">الكاش</string>
+    <string name="battery_explain">على حسب آخر 7 أيام. \"الخلفية\" هي الوقت اللي التطبيق فضل شغال فيه وانت مش بتستخدمه، وده أكبر سبب لاستهلاك البطارية. تطبيقات الرسايل والمزيكا والخرايط طبيعي يكون ليها شوية. لو تطبيق تاني رقمه عالي يبقى ده مش طبيعي: دوس عليه، وبعدين البطارية، واختار \"محسّن\" أو \"مقيّد\". وفي سامسونج تقدر كمان تضيفه من الإعدادات › البطارية › حدود الاستخدام في الخلفية › التطبيقات في وضع السكون العميق.</string>
+    <string name="open_battery_settings">افتح إعدادات تحسين البطارية</string>
+    <string name="unused_explain">تطبيقات مفتحتهاش في آخر %1$d يوم، الأكبر الأول. إزالتها بتوفر مساحة وبتوقف نشاطها في الخلفية.</string>
+    <string name="cache_explain">التطبيقات محتفظة بـ %1$s كاش في المجموع. أندرويد مش بيسمح لأي تطبيق يمسح كاش تطبيق تاني مباشرة: دوس على التطبيق، وبعدين التخزين › مسح ذاكرة التخزين المؤقت. مسح الكاش آمن، بياناتك وتسجيل دخولك بيفضلوا زي ما هم.</string>
+    <string name="bg_per_day">الخلفية: %1$s / يوم</string>
+    <string name="fg_per_day">على الشاشة: %1$s / يوم</string>
+    <string name="flag_unrestricted">البطارية غير مقيّدة</string>
+    <string name="flag_autostart">بيشتغل مع تشغيل الموبايل</string>
+    <string name="last_used">آخر استخدام: %1$s</string>
+    <string name="never_used_since">متفتحش من ساعة التسطيب (%1$s)</string>
+    <string name="app_size">الحجم: %1$s</string>
+    <string name="cache_size">الكاش: %1$s</string>
+    <string name="cache_how">دوس › التخزين › مسح ذاكرة التخزين المؤقت</string>
+    <string name="drain_high">عالي</string>
+    <string name="drain_medium">متوسط</string>
+    <string name="drain_low">طبيعي</string>
+
+    <!-- health -->
+    <string name="health_title">حالة الجهاز</string>
+    <string name="health_sub">البطارية، الحرارة، الرام، التخزين، والأمان</string>
+    <string name="health_score">تقييم الحالة</string>
+    <string name="score_good">الموبايل في حالة كويسة.</string>
+    <string name="score_warn">فيه كام حاجة محتاجة انتباه، شوف النصايح تحت.</string>
+    <string name="score_bad">فيه حاجات محتاجة تتصلح، شوف النصايح تحت.</string>
+    <string name="h_battery_level">نسبة الشحن</string>
+    <string name="h_battery_health">صحة البطارية</string>
+    <string name="h_battery_temp">حرارة البطارية</string>
+    <string name="h_battery_cycles">دورات الشحن</string>
+    <string name="h_battery_capacity">السعة التقريبية</string>
+    <string name="h_battery_voltage">جهد البطارية</string>
+    <string name="h_thermal">حرارة الموبايل</string>
+    <string name="h_power_save">وضع توفير الطاقة</string>
+    <string name="h_ram">الرام</string>
+    <string name="h_storage">التخزين</string>
+    <string name="h_uptime">من آخر إعادة تشغيل</string>
+    <string name="h_security_patch">التحديث الأمني</string>
+    <string name="h_screen_lock">قفل الشاشة</string>
+    <string name="h_usb_debug">تصحيح USB</string>
+    <string name="h_model">الموديل</string>
+    <string name="h_android">إصدار أندرويد</string>
+    <string name="h_cpu">أنوية المعالج</string>
+    <string name="bh_good">كويسة</string>
+    <string name="bh_overheat">سخنة زيادة</string>
+    <string name="bh_dead">بايظة</string>
+    <string name="bh_overvoltage">جهد زيادة</string>
+    <string name="bh_failure">عطل</string>
+    <string name="bh_cold">باردة جداً</string>
+    <string name="bh_unknown">غير معروف</string>
+    <string name="thermal_none">طبيعي</string>
+    <string name="thermal_light">دافي شوية</string>
+    <string name="thermal_moderate">سخن</string>
+    <string name="thermal_severe">سخن جداً</string>
+    <string name="hint_battery_bad">البطارية بتبلّغ عن مشكلة. افحصها في مركز صيانة سامسونج.</string>
+    <string name="hint_hot">الموبايل سخن. متشحنش وانت بتلعب، شيل الجراب، واقفل التطبيقات التقيلة.</string>
+    <string name="hint_cycles">البطارية عدّت دورات شحن كتير، وغالباً سعتها قلّت.</string>
+    <string name="hint_capacity">رقم تقريبي محسوب من عداد الشحن. قارنه بالسعة الأصلية (5000 مللي أمبير في Galaxy A34).</string>
+    <string name="hint_ram">الرام تقريباً مليانة. اقفل التطبيقات اللي مش بتستخدمها أو اعمل ريستارت.</string>
+    <string name="hint_storage">المساحة تقريباً خلصت، وده بيبطّأ الموبايل. اعمل فحص ونضّف.</string>
+    <string name="hint_restart">الموبايل مقفلش من أسبوع. الريستارت بيفضي الرام وممكن يحل البطء.</string>
+    <string name="hint_update">التحديث الأمني قديم. شوف الإعدادات › تحديث البرامج.</string>
+    <string name="hint_lock">مفيش قفل شاشة. أي حد يمسك الموبايل يقدر يفتحه. حط رقم سري أو باسورد أو بصمة.</string>
+    <string name="hint_adb">تصحيح USB مفعّل. اقفله من خيارات المطور لو مش بتستخدمه.</string>
+
+    <!-- permission audit -->
+    <string name="audit_title">أذونات التطبيقات</string>
+    <string name="audit_sub">التطبيقات اللي تقدر تستخدم الكاميرا والمايك والموقع…</string>
+    <string name="audit_explain">التطبيقات اللي معاها دلوقتي إذن لبيانات حساسة. لو تطبيق مش محتاج الإذن، دوس عليه وشيله.</string>
+    <string name="perm_camera">الكاميرا</string>
+    <string name="perm_mic">المايك</string>
+    <string name="perm_location">الموقع</string>
+    <string name="perm_bg_location">الموقع طول الوقت (في الخلفية)</string>
+    <string name="perm_contacts">جهات الاتصال</string>
+    <string name="perm_sms">الرسايل SMS</string>
+    <string name="perm_calllog">سجل المكالمات</string>
+    <string name="perm_sensors">حساسات الجسم</string>
+
+    <!-- trash -->
+    <string name="trash_title">سلة المحذوفات</string>
+    <string name="trash_empty">السلة فاضية</string>
+    <string name="trash_explain">العناصر المحذوفة بتفضل هنا %1$d يوم وبعدين بتتمسح نهائي.</string>
+    <string name="trash_item_info">%1$s • اتمسح %2$s • فاضل %3$d يوم</string>
+    <string name="restore_all">استرجاع الكل</string>
+    <string name="empty_trash">تفضية السلة</string>
+    <string name="empty_trash_confirm">حذف كل اللي في السلة نهائي وتوفير %1$s؟ مينفعش ترجعهم تاني.</string>
+
+    <!-- settings -->
+    <string name="language">اللغة</string>
+    <string name="lang_system">لغة الموبايل</string>
+    <string name="use_trash">استخدام السلة</string>
+    <string name="use_trash_desc">انقل الملفات المحذوفة للسلة الأول عشان تقدر ترجعها.</string>
+    <string name="trash_days">مدة بقاء العناصر في السلة</string>
+    <string name="scan_settings">الفحص</string>
+    <string name="large_threshold">حجم الملف الكبير</string>
+    <string name="screenshot_age">السكرينشوتات الأقدم من</string>
+    <string name="unused_threshold">التطبيق يعتبر مش مستخدم بعد</string>
+    <string name="rescan_note">التغييرات بتتطبق في الفحص الجاي.</string>
+    <string name="about">عن التطبيق</string>
+    <string name="about_text">منظف الموبايل %1$s. شغال من غير إنترنت تماماً: مفيش أي حاجة بتخرج من موبايلك.</string>
+</resources>

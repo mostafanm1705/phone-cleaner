@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Phone Cleaner</string>
+
+    <!-- general -->
+    <string name="back">Back</string>
+    <string name="settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="close">Close</string>
+    <string name="all">All</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="manage">Manage</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="restore">Restore</string>
+    <string name="open_with">Open with…</string>
+    <string name="cannot_open">Could not open this item</string>
+    <string name="grant_access">Grant access</string>
+    <string name="nothing_found">Nothing found</string>
+    <string name="n_items">%1$d items</string>
+    <string name="n_items_size">%1$d items • %2$s</string>
+    <string name="n_days">%1$d days</string>
+    <string name="dur_hm">%1$d h %2$d min</string>
+    <string name="dur_m">%1$d min</string>
+    <string name="days_hours">%1$d days %2$d h</string>
+    <string name="free_of">%1$s free of %2$s</string>
+    <string name="mah_value">≈ %1$d mAh</string>
+    <string name="charging">charging</string>
+
+    <!-- permissions -->
+    <string name="perm_files_explain">To scan your phone storage and find junk, duplicates and blurry photos, the app needs \"All files access\". Tap the button, then turn on the switch for Phone Cleaner.</string>
+    <string name="perm_privacy">Everything is analyzed on your phone. Nothing is uploaded, and nothing is deleted without your confirmation.</string>
+    <string name="perm_usage_explain">To see which apps drain the battery, which apps you no longer use and how much cache each app keeps, allow \"Usage access\" for Phone Cleaner.</string>
+
+    <!-- home -->
+    <string name="storage_title">Storage</string>
+    <string name="storage_used">%1$s used of %2$s</string>
+    <string name="storage_free">%1$s free</string>
+    <string name="scan_intro">Scan the whole phone for junk files, duplicates, blurry photos, old screenshots, WhatsApp media, leftovers of removed apps and more. You decide what gets deleted.</string>
+    <string name="scan_done">Scan finished. Open each category to review what was found.</string>
+    <string name="scan_full">Start full scan</string>
+    <string name="rescan">Scan again</string>
+    <string name="scan_failed">Scan failed. Please try again.</string>
+    <string name="phase_files">Scanning files… %1$d</string>
+    <string name="phase_duplicates">Looking for duplicate files…</string>
+    <string name="phase_images">Analyzing photos %1$d / %2$d</string>
+    <string name="phase_apps">Analyzing apps…</string>
+    <string name="quick_title">%1$s can be safely cleaned</string>
+    <string name="quick_desc">Junk files, empty folders, installed APK files, leftovers of removed apps and extra copies of duplicate files.</string>
+    <string name="quick_button">Review and clean</string>
+    <string name="quick_confirm_title">Clean safe items?</string>
+    <string name="section_files">Storage</string>
+    <string name="section_apps">Apps</string>
+    <string name="section_device">Device</string>
+
+    <!-- categories -->
+    <string name="cat_junk">Junk files</string>
+    <string name="cat_junk_desc">Temporary files, logs, thumbnail caches and empty files. Normal: phones collect these all the time. Deleting them is safe; thumbnails are rebuilt when needed.</string>
+    <string name="cat_empty">Empty folders</string>
+    <string name="cat_empty_desc">Folders with no files inside. Safe to delete; system folders are never listed.</string>
+    <string name="cat_apks">APK files</string>
+    <string name="cat_apks_desc">App installer files. If the app is already installed (same or newer version) the installer is no longer needed. Keep installers of apps you plan to install later.</string>
+    <string name="cat_leftovers">Leftovers of removed apps</string>
+    <string name="cat_leftovers_desc">Folders left behind by apps that are no longer installed. Big folders are not pre-selected because they may contain media you want to keep.</string>
+    <string name="cat_duplicates">Duplicate files</string>
+    <string name="cat_duplicates_desc">Files with exactly the same content. In each group one copy is marked \"Keep\" (the original) and the extra copies are pre-selected.</string>
+    <string name="cat_similar">Similar photos</string>
+    <string name="cat_similar_desc">Burst shots and near-identical photos. The sharpest photo of each group is kept; the others are pre-selected. Tap a photo to compare.</string>
+    <string name="cat_blurry">Blurry photos</string>
+    <string name="cat_blurry_desc">Photos with very little sharp detail (shaky, out of focus or pocket shots). Very blurry ones are pre-selected. Tap a photo to check it first; plain or dark photos can also appear here.</string>
+    <string name="cat_lowres">Low quality photos</string>
+    <string name="cat_lowres_desc">Small, pixelated images (under 0.3 megapixels), usually forwarded or downloaded copies.</string>
+    <string name="cat_screenshots">Old screenshots</string>
+    <string name="cat_screenshots_desc">Screenshots and screen recordings older than the age set in settings. Usually no longer needed.</string>
+    <string name="cat_whatsapp">WhatsApp media</string>
+    <string name="cat_whatsapp_desc">Photos, videos, voice notes and files received or sent on WhatsApp. Use the filters to clean one type at a time. Nothing is pre-selected.</string>
+    <string name="cat_large">Large files</string>
+    <string name="cat_large_desc">Files bigger than the size set in settings. Nothing is pre-selected; check what you no longer need.</string>
+
+    <!-- reasons -->
+    <string name="reason_thumbnails">Thumbnail cache</string>
+    <string name="reason_temp">Temporary / unfinished download</string>
+    <string name="reason_log">Log file</string>
+    <string name="reason_empty_file">Empty file (0 bytes)</string>
+    <string name="reason_cache">Cache file</string>
+    <string name="reason_empty_folder">Empty folder</string>
+    <string name="reason_leftover">From removed app: %1$s</string>
+    <string name="reason_dup_keep">Original copy, will be kept</string>
+    <string name="reason_dup_copy">Copy of %1$s</string>
+    <string name="reason_lowres">Resolution %1$s</string>
+    <string name="reason_blurry">Blurry (sharpness %1$s)</string>
+    <string name="reason_very_blurry">Very blurry (sharpness %1$s)</string>
+    <string name="reason_similar_best">Sharpest photo of this group</string>
+    <string name="reason_similar">Similar to %1$s</string>
+    <string name="reason_apk_broken">Damaged installer</string>
+    <string name="reason_apk_installed">%1$s is already installed</string>
+    <string name="reason_apk_newer">%1$s: newer than the installed version</string>
+    <string name="reason_apk_not_installed">%1$s is not installed</string>
+    <string name="wa_sent">Sent</string>
+    <string name="wa_private">Private</string>
+    <string name="type_image">Image</string>
+    <string name="type_video">Video</string>
+    <string name="type_audio">Audio</string>
+    <string name="type_archive">Archive</string>
+    <string name="type_document">Document</string>
+    <string name="type_other">Other</string>
+
+    <!-- review list -->
+    <string name="tag_suggested">Delete</string>
+    <string name="tag_keep">Keep</string>
+    <string name="tag_review">Review</string>
+    <string name="select_suggested">Suggested</string>
+    <string name="select_all">Select all</string>
+    <string name="select_none">Clear</string>
+    <string name="group_n">Group %1$d • %2$d files</string>
+    <string name="delete_selected">Delete %1$d • %2$s</string>
+    <string name="confirm_delete_title">Delete selected items?</string>
+    <string name="confirm_delete_body">%1$d items (%2$s) will be removed.</string>
+    <string name="warn_keep_selected">You selected a copy marked \"Keep\". If all copies of a file are selected, the file will be gone.</string>
+    <string name="delete_permanently">Delete permanently</string>
+    <string name="permanent_note">Space is freed now. This cannot be undone.</string>
+    <string name="trash_note">Moved to the app trash first, so you can restore it. Space is freed when the trash is emptied.</string>
+    <string name="msg_trashed">%1$s moved to trash</string>
+    <string name="msg_deleted">%1$s deleted</string>
+    <string name="msg_restored">%1$d items restored</string>
+
+    <!-- apps -->
+    <string name="apps_title">Apps</string>
+    <string name="apps_battery">Battery usage</string>
+    <string name="apps_battery_sub">%1$d apps with high background activity</string>
+    <string name="apps_battery_hint">Which apps keep working in the background</string>
+    <string name="apps_unused">Unused apps</string>
+    <string name="apps_unused_sub">%1$d apps not opened in %2$d days</string>
+    <string name="apps_unused_hint">Apps you have not opened for a long time</string>
+    <string name="apps_cache">App cache</string>
+    <string name="apps_cache_sub">%1$s of cache in all apps</string>
+    <string name="apps_cache_hint">How much cache each app keeps</string>
+    <string name="tab_battery">Battery</string>
+    <string name="tab_unused">Unused</string>
+    <string name="tab_cache">Cache</string>
+    <string name="battery_explain">Based on the last 7 days. \"Background\" is the time an app kept working while you were not using it, the main cause of battery drain. Messaging, music and navigation apps normally have some. High values for other apps are not normal: tap the app, then Battery, and choose \"Optimized\" or \"Restricted\". On Samsung you can also add it to Settings › Battery › Background usage limits › Deep sleeping apps.</string>
+    <string name="open_battery_settings">Open battery optimization settings</string>
+    <string name="unused_explain">Apps you have not opened in the last %1$d days, biggest first. Uninstalling them frees space and stops their background activity.</string>
+    <string name="cache_explain">Apps keep %1$s of cache in total. Android does not allow other apps to clear it directly: tap an app, then Storage › Clear cache. Clearing cache is safe; your data and login stay.</string>
+    <string name="bg_per_day">Background: %1$s / day</string>
+    <string name="fg_per_day">On screen: %1$s / day</string>
+    <string name="flag_unrestricted">Unrestricted battery</string>
+    <string name="flag_autostart">Starts with the phone</string>
+    <string name="last_used">Last used: %1$s</string>
+    <string name="never_used_since">Not opened since install (%1$s)</string>
+    <string name="app_size">Size: %1$s</string>
+    <string name="cache_size">Cache: %1$s</string>
+    <string name="cache_how">Tap › Storage › Clear cache</string>
+    <string name="drain_high">High</string>
+    <string name="drain_medium">Medium</string>
+    <string name="drain_low">Normal</string>
+
+    <!-- health -->
+    <string name="health_title">Device health</string>
+    <string name="health_sub">Battery, temperature, memory, storage and security</string>
+    <string name="health_score">Health score</string>
+    <string name="score_good">Your phone is in good shape.</string>
+    <string name="score_warn">A few things need attention; see the tips below.</string>
+    <string name="score_bad">Some items need action; see the tips below.</string>
+    <string name="h_battery_level">Battery level</string>
+    <string name="h_battery_health">Battery health</string>
+    <string name="h_battery_temp">Battery temperature</string>
+    <string name="h_battery_cycles">Charge cycles</string>
+    <string name="h_battery_capacity">Estimated capacity</string>
+    <string name="h_battery_voltage">Battery voltage</string>
+    <string name="h_thermal">Phone temperature state</string>
+    <string name="h_power_save">Power saving mode</string>
+    <string name="h_ram">Memory (RAM)</string>
+    <string name="h_storage">Storage</string>
+    <string name="h_uptime">Time since restart</string>
+    <string name="h_security_patch">Security update</string>
+    <string name="h_screen_lock">Screen lock</string>
+    <string name="h_usb_debug">USB debugging</string>
+    <string name="h_model">Model</string>
+    <string name="h_android">Android version</string>
+    <string name="h_cpu">CPU cores</string>
+    <string name="bh_good">Good</string>
+    <string name="bh_overheat">Overheating</string>
+    <string name="bh_dead">Dead</string>
+    <string name="bh_overvoltage">Over voltage</string>
+    <string name="bh_failure">Failure</string>
+    <string name="bh_cold">Too cold</string>
+    <string name="bh_unknown">Unknown</string>
+    <string name="thermal_none">Normal</string>
+    <string name="thermal_light">Slightly warm</string>
+    <string name="thermal_moderate">Warm</string>
+    <string name="thermal_severe">Hot</string>
+    <string name="hint_battery_bad">The battery reports a problem. Have it checked at a Samsung service center.</string>
+    <string name="hint_hot">The phone is hot. Avoid charging while gaming, remove the case and close heavy apps.</string>
+    <string name="hint_cycles">The battery has many charge cycles; capacity is usually reduced at this point.</string>
+    <string name="hint_capacity">Estimated from the charge counter. Rough value: compare it with the original capacity (5000 mAh on Galaxy A34).</string>
+    <string name="hint_ram">Memory is almost full. Close apps you are not using or restart the phone.</string>
+    <string name="hint_storage">Storage is almost full, which slows the phone down. Run a scan and clean.</string>
+    <string name="hint_restart">The phone has not been restarted for a week. A restart clears memory and can fix slowness.</string>
+    <string name="hint_update">Security update is old. Check Settings › Software update.</string>
+    <string name="hint_lock">No screen lock. Anyone who picks up the phone can open it. Set a PIN, password or fingerprint.</string>
+    <string name="hint_adb">USB debugging is on. Turn it off in Developer options if you do not use it.</string>
+
+    <!-- permission audit -->
+    <string name="audit_title">App permissions</string>
+    <string name="audit_sub">Apps that can use camera, microphone, location…</string>
+    <string name="audit_explain">Apps that currently have access to sensitive data. If an app does not need it, tap it and remove the permission.</string>
+    <string name="perm_camera">Camera</string>
+    <string name="perm_mic">Microphone</string>
+    <string name="perm_location">Location</string>
+    <string name="perm_bg_location">Location all the time (background)</string>
+    <string name="perm_contacts">Contacts</string>
+    <string name="perm_sms">SMS messages</string>
+    <string name="perm_calllog">Call log</string>
+    <string name="perm_sensors">Body sensors</string>
+
+    <!-- trash -->
+    <string name="trash_title">Trash</string>
+    <string name="trash_empty">Trash is empty</string>
+    <string name="trash_explain">Deleted items stay here for %1$d days and are then removed for good.</string>
+    <string name="trash_item_info">%1$s • deleted %2$s • %3$d days left</string>
+    <string name="restore_all">Restore all</string>
+    <string name="empty_trash">Empty trash</string>
+    <string name="empty_trash_confirm">Permanently delete everything in the trash and free %1$s? This cannot be undone.</string>
+
+    <!-- settings -->
+    <string name="language">Language</string>
+    <string name="lang_system">Phone language</string>
+    <string name="use_trash">Use trash</string>
+    <string name="use_trash_desc">Move deleted files to the trash first so they can be restored.</string>
+    <string name="trash_days">Keep items in trash for</string>
+    <string name="scan_settings">Scan</string>
+    <string name="large_threshold">Large file size</string>
+    <string name="screenshot_age">Screenshots older than</string>
+    <string name="unused_threshold">App is unused after</string>
+    <string name="rescan_note">Changes apply on the next scan.</string>
+    <string name="about">About</string>
+    <string name="about_text">Phone Cleaner %1$s. Works fully offline: nothing leaves your phone.</string>
+</resources>
